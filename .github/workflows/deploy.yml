@@ -1,0 +1,34 @@
+name: Deploy Hackathon API
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy API via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ${{ secrets.PROJECT_PATH }}
+
+            # 1. Забираем свежий код из репозитория
+            git pull origin master
+
+            # 2. Устанавливаем зависимости через PHP 8.2 и Composer 2
+            php8.2 composer.phar install
+
+            # 3. Применяем новые миграции БД
+            php8.2 artisan migrate --force
+
+            # 4. Пересобираем кеш конфигураций и роутов
+            php8.2 artisan optimize:clear
+            php8.2 artisan config:cache
+            php8.2 artisan route:cache
