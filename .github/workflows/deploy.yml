@@ -24,6 +24,7 @@ jobs:
 
             # 2. Устанавливаем зависимости через PHP 8.2 и Composer 2
             php8.2 composer.phar install --no-dev --optimize-autoloader
+            php8.2 artisan package:discover --ansi
 
             # 3. Применяем новые миграции БД
             php8.2 artisan migrate --force
