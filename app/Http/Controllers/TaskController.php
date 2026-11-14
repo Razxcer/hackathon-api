@@ -64,10 +64,10 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    // public function destroy(Task $task)
-    // {
-    //     $task->delete();
+    public function destroy(Task $task)
+    {
+        $task->delete();
 
-    //     return response()->json(['message'=>'Удалено']);
-    // }
+        return response()->json(['message'=>'Удалено']);
+    }
 }
