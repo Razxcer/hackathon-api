@@ -23,7 +23,7 @@ jobs:
             git pull origin master
 
             # 2. Устанавливаем зависимости через PHP 8.2 и Composer 2
-            php8.2 composer.phar install
+            php8.2 composer.phar install --no-dev --optimize-autoloader
 
             # 3. Применяем новые миграции БД
             php8.2 artisan migrate --force
