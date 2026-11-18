@@ -28,17 +28,34 @@ class HazardPointController extends Controller
         $lng = $data['lng'];
         $userId = $request->user()->id;
 
-        // 1. Берем ID всех точек, которые этот юзер уже проехал
-        $passedIds = DB::table('user_passed_hazards')
-            ->where('user_id', $userId)
-            ->pluck('hazard_point_id');
-
         $haversine = "(6371000 * acos(
             cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
             sin(radians(?)) * sin(radians(latitude))
         ))";
 
-        // 2. Ищем одобренные точки в радиусе опасности, исключая уже проеханные
+        // 1. Удаляем записи о проезде для точек, от которых мы уехали дальше 5000 метров
+        $farHazardIds = HazardPoint::query()
+            ->whereIn('id', function ($query) use ($userId) {
+                $query->select('hazard_point_id')
+                    ->from('user_passed_hazards')
+                    ->where('user_id', $userId);
+            })
+            ->whereRaw("{$haversine} > 5000", [$lat, $lng, $lat])
+            ->pluck('id');
+
+        if ($farHazardIds->isNotEmpty()) {
+            DB::table('user_passed_hazards')
+                ->where('user_id', $userId)
+                ->whereIn('hazard_point_id', $farHazardIds)
+                ->delete();
+        }
+
+        // 2. Берем оставшиеся ID проеханных точек (которые ближе 5000 м)
+        $passedIds = DB::table('user_passed_hazards')
+            ->where('user_id', $userId)
+            ->pluck('hazard_point_id');
+
+        // 3. Ищем одобренные точки в опасном радиусе, исключая уже проеханные
         $hazards = HazardPoint::query()
             ->where('status', 'approved')
             ->whereNotIn('id', $passedIds)
@@ -48,7 +65,7 @@ class HazardPointController extends Controller
             ->orderBy('distance')
             ->get();
 
-        // 3. Если до какой-то точки <= 5 метров — записываем её как проеханную и убираем из выдачи
+        // 4. Если до точки <= 5 метров — записываем её как проеханную и убираем из выдачи
         $activeHazards = $hazards->reject(function ($hazard) use ($userId) {
             if ($hazard->distance <= 5) {
                 DB::table('user_passed_hazards')->insertOrIgnore([
@@ -57,7 +74,7 @@ class HazardPointController extends Controller
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-                return true; // убираем из текущего ответа
+                return true;
             }
             return false;
         })->values();
