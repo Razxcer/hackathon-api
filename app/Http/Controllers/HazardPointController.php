@@ -28,94 +28,47 @@ class HazardPointController extends Controller
         $lng = $data['lng'];
         $userId = $request->user()->id;
 
+        // 1. Берем ID всех точек, которые этот юзер уже проехал
+        $passedIds = DB::table('user_passed_hazards')
+            ->where('user_id', $userId)
+            ->pluck('hazard_point_id');
+
         $haversine = "(6371000 * acos(
             cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
             sin(radians(?)) * sin(radians(latitude))
         ))";
 
-        // 1. Получаем все одобренные точки с расчетом дистанции до каждой
-        $allHazards = HazardPoint::query()
+        // 2. Ищем одобренные точки в радиусе опасности, исключая уже проеханные
+        $hazards = HazardPoint::query()
             ->where('status', 'approved')
+            ->whereNotIn('id', $passedIds)
             ->select('*')
             ->selectRaw("ROUND({$haversine}, 1) AS distance", [$lat, $lng, $lat])
-            ->get()
-            ->keyBy('id');
+            ->whereRaw("{$haversine} <= danger_radius", [$lat, $lng, $lat])
+            ->orderBy('distance')
+            ->get();
 
-        // 2. Загружаем историю взаимодействий этого пользователя с точками
-        $userRecords = DB::table('user_passed_hazards')
-            ->where('user_id', $userId)
-            ->get()
-            ->keyBy('hazard_point_id');
-
-        $activeHazards = collect();
-
-        foreach ($allHazards as $hazardId => $hazard) {
-            $dist = (float) $hazard->distance;
-            $record = $userRecords->get($hazardId);
-
-            // Если уехали дальше 5000 метров — сбрасываем статус проезда
-            if ($dist > 5000) {
-                if ($record) {
-                    DB::table('user_passed_hazards')->where('id', $record->id)->delete();
-                }
-                continue;
+        // 3. Если до какой-то точки <= 5 метров — записываем её как проеханную и убираем из выдачи
+        $activeHazards = $hazards->reject(function ($hazard) use ($userId) {
+            if ($hazard->distance <= 5) {
+                DB::table('user_passed_hazards')->insertOrIgnore([
+                    'user_id' => $userId,
+                    'hazard_point_id' => $hazard->id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+                return true; // убираем из текущего ответа
             }
+            return false;
+        })->values();
 
-            // Если мы внутри опасного радиуса
-            if ($dist <= $hazard->danger_radius) {
-                if (! $record) {
-                    // Впервые вошли в зону опасности — записываем в базу и показываем тревогу
-                    DB::table('user_passed_hazards')->insert([
-                        'user_id' => $userId,
-                        'hazard_point_id' => $hazardId,
-                        'last_distance' => $dist,
-                        'is_passed' => false,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-                    $activeHazards->push($hazard);
-                } else {
-                    // Если точка уже помечена как проеханная — пропускаем её!
-                    if ($record->is_passed) {
-                        continue;
-                    }
-
-                    // Проверяем: дистанция начала расти (с запасом 5 метров от погрешности GPS)?
-                    // Значит, мы проехали точку мимо и теперь удаляемся от неё!
-                    if ($dist > $record->last_distance + 5) {
-                        DB::table('user_passed_hazards')
-                            ->where('id', $record->id)
-                            ->update([
-                                'is_passed' => true,
-                                'last_distance' => $dist,
-                                'updated_at' => now(),
-                            ]);
-                        continue; // Больше не показываем как опасность
-                    }
-
-                    // Если всё ещё приближаемся — обновляем минимальную дистанцию и продолжаем предупреждать
-                    if ($dist < $record->last_distance) {
-                        DB::table('user_passed_hazards')
-                            ->where('id', $record->id)
-                            ->update([
-                                'last_distance' => $dist,
-                                'updated_at' => now(),
-                            ]);
-                    }
-
-                    $activeHazards->push($hazard);
-                }
-            }
-        }
-        // Сортируем актуальные опасности от ближайшей к дальней
-        $sortedHazards = $activeHazards->sortBy('distance')->values();
-        $nearest = $sortedHazards->first();
+        $nearest = $activeHazards->first();
 
         return response()->json([
             'danger' => $nearest !== null,
             'nearest_hazard' => $nearest,
             'distance_to_nearest' => $nearest ? (float) $nearest->distance : null,
-            'hazards' => $sortedHazards,
+            'hazards' => $activeHazards,
         ]);
     }
 

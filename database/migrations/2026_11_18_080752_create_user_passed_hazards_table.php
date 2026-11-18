@@ -16,8 +16,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('hazard_point_id')->constrained()->cascadeOnDelete();
-            $table->float('last_distance'); // Дистанция при последнем замере
-            $table->boolean('is_passed')->default(false); // true = точка уже проехана
             $table->timestamps();
 
             $table->unique(['user_id', 'hazard_point_id']);
