@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HazardPoint;
 use Illuminate\Http\Request;
 
 class HazardPointController extends Controller
