@@ -14,6 +14,21 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
+        ],
+        [
+            // Сообщения для имени (name)
+            'name.required'     => 'Пожалуйста, укажите ваше имя.',
+            'name.string'       => 'Имя должно быть строкой.',
+            'name.max'          => 'Имя не должно превышать 255 символов.',
+
+            // Сообщения для почты (email)
+            'email.required'    => 'Поле email обязательно для заполнения.',
+            'email.email'       => 'Указан некорректный адрес почты.',
+            'email.unique'      => 'Этот email уже занят.',
+
+            // Сообщения для пароля (password)
+            'password.required' => 'Поле пароля обязательно для заполнения.',
+            'password.min'      => 'Пароль должен содержать минимум :min символов.',
         ]);
 
         $user = User::create([

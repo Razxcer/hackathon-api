@@ -14,20 +14,20 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Тестовый аккаунт для быстрой проверки на демо
-        User::create([
-            'name' => 'Тестовый Юзер',
-            'email' => 'test@mail.ru',
-            'password' => Hash::make('123456'),
-        ]);
+        // // Тестовый аккаунт для быстрой проверки на демо
+        // User::create([
+        //     'name' => 'Тестовый Юзер',
+        //     'email' => 'test@mail.ru',
+        //     'password' => Hash::make('123456'),
+        // ]);
 
-        // Еще 3 случайных пользователя
-        for ($i = 0; $i < 3; $i++) {
-            User::create([
-                'name' => fake('ru_RU')->name(),
-                'email' => fake()->unique()->safeEmail(),
-                'password' => Hash::make('123456'),
-            ]);
-        }
+        // // Еще 3 случайных пользователя
+        // for ($i = 0; $i < 3; $i++) {
+        //     User::create([
+        //         'name' => fake('ru_RU')->name(),
+        //         'email' => fake()->unique()->safeEmail(),
+        //         'password' => Hash::make('123456'),
+        //     ]);
+        // }
     }
 }
