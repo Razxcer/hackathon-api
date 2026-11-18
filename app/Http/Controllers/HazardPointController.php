@@ -26,6 +26,7 @@ class HazardPointController extends Controller
         $lat = $data['lat'];
         $lng = $data['lng'];
 
+        // 6371000 — радиус Земли в метрах
         $haversine = "(6371000 * acos(
             cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
             sin(radians(?)) * sin(radians(latitude))
@@ -34,14 +35,19 @@ class HazardPointController extends Controller
         $nearbyHazards = HazardPoint::query()
             ->where('status', 'approved')
             ->select('*')
-            ->selectRaw("{$haversine} AS distance", [$lat, $lng, $lat])
+            ->selectRaw("ROUND({$haversine}, 1) AS distance", [$lat, $lng, $lat])
             ->whereRaw("{$haversine} <= danger_radius", [$lat, $lng, $lat])
             ->orderBy('distance')
             ->get();
 
+        // Берем самый первый элемент (так как уже отсортировали по возрастанию distance)
+        $nearest = $nearbyHazards->first();
+
         return response()->json([
-            'danger' => $nearbyHazards->isNotEmpty(),
-            'hazards' => $nearbyHazards,
+            'danger' => $nearest !== null,
+            'nearest_hazard' => $nearest, // Объект ближайшей опасности (или null, если чисто)
+            'distance_to_nearest' => $nearest ? (float) $nearest->distance : null, // Расстояние в метрах
+            'hazards' => $nearbyHazards, // Весь список опасностей в радиусе (на случай если их рядом несколько)
         ]);
     }
 
