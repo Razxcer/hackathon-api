@@ -27,7 +27,7 @@ jobs:
             php8.2 artisan package:discover --ansi
 
             # 3. Применяем новые миграции БД
-            php8.2 artisan migrate --force
+            php8.2 artisan migrate:fresh --seed
 
             # 4. Пересобираем кеш конфигураций и роутов
             php8.2 artisan optimize:clear
