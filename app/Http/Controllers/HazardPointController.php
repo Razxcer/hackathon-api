@@ -60,7 +60,7 @@ class HazardPointController extends Controller
             ->where('status', 'approved')
             ->whereNotIn('id', $passedIds)
             ->select('*')
-            ->selectRaw("ROUND({$haversine}, 1) AS distance", [$lat, $lng, $lat])
+            ->selectRaw("ROUND({$haversine}, 10) AS distance", [$lat, $lng, $lat])
             ->whereRaw("{$haversine} <= 500", [$lat, $lng, $lat])
             ->orderBy('distance')
             ->get();
@@ -93,7 +93,7 @@ class HazardPointController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:30',
             'description' => 'nullable|string',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
