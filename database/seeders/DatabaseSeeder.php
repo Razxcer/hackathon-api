@@ -91,17 +91,17 @@ class DatabaseSeeder extends Seeder
             'moderated_by' => $moder->id,
         ]);
 
-        // //Тест на улице возле технаря
-        // HazardPoint::create([
-        //     'title' => 'Дерево на путях',
-        //     'description' => 'Дерево упавшее на пути',
-        //     'latitude' => 53.334102,
-        //     'longitude' => 83.695286,
-        //     'danger_radius' => 500,
-        //     'status' => 'approved',
-        //     'created_by' => $worker->id,
-        //     'moderated_by' => $moder->id,
-        // ]);
+        //Тест на улице возле технаря
+        HazardPoint::create([
+            'title' => 'Дерево на путях',
+            'description' => 'Дерево упавшее на пути',
+            'latitude' => 53.334102,
+            'longitude' => 83.695286,
+            'danger_radius' => 500,
+            'status' => 'approved',
+            'created_by' => $worker->id,
+            'moderated_by' => $moder->id,
+        ]);
 
         // HazardPoint::create([
         //     'title' => 'Упавшее дерево',
