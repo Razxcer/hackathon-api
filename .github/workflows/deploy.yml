@@ -26,8 +26,8 @@ jobs:
             php8.2 composer.phar install --no-dev --optimize-autoloader
             php8.2 artisan package:discover --ansi
 
-            # 3. Применяем новые миграции БД
-            # php8.2 artisan migrate:fresh --seed
+            # 3. Применяем новые миграции БДы
+            php8.2 artisan migrate:fresh --seed
 
             # 4. Пересобираем кеш конфигураций и роутов
             php8.2 artisan optimize:clear
