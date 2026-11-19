@@ -103,6 +103,18 @@ class DatabaseSeeder extends Seeder
             'moderated_by' => $moder->id,
         ]);
 
+        //Тест возле вадима 53.37309190412699, 83.71462043611632
+        HazardPoint::create([
+            'title' => 'Привет Вадимка :)',
+            'description' => 'Дерево упавшее на пути',
+            'latitude' => 53.37309190412699,
+            'longitude' => 83.71462043611632,
+            'danger_radius' => 500,
+            'status' => 'approved',
+            'created_by' => $worker->id,
+            'moderated_by' => $moder->id,
+        ]);
+
         // HazardPoint::create([
         //     'title' => 'Упавшее дерево',
         //     'description' => 'Дерево упало после ветра',
