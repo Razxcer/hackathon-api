@@ -107,7 +107,7 @@ class HazardPointController extends Controller
         }
 
         $user = $request->user();
-        $isStaff = in_array($user->role, ['moderator', 'admin']);
+        $isStaff = in_array($user->role, ['worker', 'moderator', 'admin']);
 
         $hazard = HazardPoint::create([
             'title' => $data['title'],
