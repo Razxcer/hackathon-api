@@ -76,17 +76,17 @@ class DatabaseSeeder extends Seeder
 
         // 53.333403735056045, 83.69624472864318
 
-        // //Тест в технаре БЛИЗКО по коридору
-        // HazardPoint::create([
-        //     'title' => 'Посторонний предмет',
-        //     'description' => 'Предмет на рельсах',
-        //     'latitude' => 53.333403735056045,
-        //     'longitude' => 83.69624472864318,
-        //     'danger_radius' => 500,
-        //     'status' => 'approved',
-        //     'created_by' => $worker->id,
-        //     'moderated_by' => $moder->id,
-        // ]);
+        //Тест в технаре БЛИЗКО по коридору
+        HazardPoint::create([
+            'title' => 'Посторонний предмет',
+            'description' => 'Предмет на рельсах',
+            'latitude' => 53.333403735056045,
+            'longitude' => 83.69624472864318,
+            'danger_radius' => 500,
+            'status' => 'approved',
+            'created_by' => $worker->id,
+            'moderated_by' => $moder->id,
+        ]);
 
         // //Тест на улице возле технаря
         // HazardPoint::create([
