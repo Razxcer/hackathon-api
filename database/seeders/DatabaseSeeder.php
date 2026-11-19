@@ -23,6 +23,9 @@ class DatabaseSeeder extends Seeder
         $admin = User::create(['name' => 'Админ', 'email' => 'admin@test.ru', 'password' => '123456', 'role' => 'admin']);
         $moder = User::create(['name' => 'Модератор', 'email' => 'moder@test.ru', 'password' => '123456', 'role' => 'moderator']);
         $worker = User::create(['name' => 'Составитель Иван', 'email' => 'worker@test.ru', 'password' => '123456', 'role' => 'worker']);
+        $worker = User::create(['name' => 'Кирилл', 'email' => 'arbuzik31.31@gmail.com', 'password' => '123456', 'role' => 'worker']);
+        $worker = User::create(['name' => 'Иван', 'email' => 'sysolinivan753@gmail.com', 'password' => '123456', 'role' => 'worker']);
+        $worker = User::create(['name' => 'Вадим', 'email' => 'root@gmail.com', 'password' => '123456', 'role' => 'moderator']);
         User::create(['name' => 'Гость', 'email' => 'guest@test.ru', 'password' => '123456', 'role' => 'guest']);
 
         // Тестовая одобренная точка (например, ж/д пути в Барнауле)
