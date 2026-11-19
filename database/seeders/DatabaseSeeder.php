@@ -62,16 +62,43 @@ class DatabaseSeeder extends Seeder
 
         // 53.334102, 83.695286
 
-        HazardPoint::create([
-            'title' => 'Посторонний предмет(тест)',
-            'description' => 'Предмет на рельсах',
-            'latitude' => 53.334102,
-            'longitude' => 83.695286,
-            'danger_radius' => 500,
-            'status' => 'approved',
-            'created_by' => $worker->id,
-            'moderated_by' => $moder->id,
-        ]);
+        // //Тест в технаре далеко по коридору
+        // HazardPoint::create([
+        //     'title' => 'Посторонний предмет',
+        //     'description' => 'Предмет на рельсах',
+        //     'latitude' => 53.334102,
+        //     'longitude' => 83.695286,
+        //     'danger_radius' => 500,
+        //     'status' => 'approved',
+        //     'created_by' => $worker->id,
+        //     'moderated_by' => $moder->id,
+        // ]);
+
+        // 53.333403735056045, 83.69624472864318
+
+        // //Тест в технаре БЛИЗКО по коридору
+        // HazardPoint::create([
+        //     'title' => 'Посторонний предмет',
+        //     'description' => 'Предмет на рельсах',
+        //     'latitude' => 53.333403735056045,
+        //     'longitude' => 83.69624472864318,
+        //     'danger_radius' => 500,
+        //     'status' => 'approved',
+        //     'created_by' => $worker->id,
+        //     'moderated_by' => $moder->id,
+        // ]);
+
+        // //Тест на улице возле технаря
+        // HazardPoint::create([
+        //     'title' => 'Дерево на путях',
+        //     'description' => 'Дерево упавшее на пути',
+        //     'latitude' => 53.334102,
+        //     'longitude' => 83.695286,
+        //     'danger_radius' => 500,
+        //     'status' => 'approved',
+        //     'created_by' => $worker->id,
+        //     'moderated_by' => $moder->id,
+        // ]);
 
         // HazardPoint::create([
         //     'title' => 'Упавшее дерево',
