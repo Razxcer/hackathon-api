@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             'description' => 'Негабарит справа по ходу движения, спуститься с подножки заранее!',
             'latitude' => 53.356100,
             'longitude' => 83.749200,
-            'danger_radius' => 150,
+            'danger_radius' => 500,
             'status' => 'approved',
             'created_by' => $worker->id,
             'moderated_by' => $moder->id,
@@ -43,9 +43,42 @@ class DatabaseSeeder extends Seeder
             'description' => 'Провис провода около депо',
             'latitude' => 53.361000,
             'longitude' => 83.755000,
-            'danger_radius' => 100,
+            'danger_radius' => 500,
             'status' => 'pending',
             'created_by' => $worker->id,
+        ]);
+
+        HazardPoint::create([
+            'title' => 'Сугроб на путях',
+            'description' => 'Снежый занос перекрывает путь',
+            'latitude' => 53.334044,
+            'longitude' => 83.696042,
+            'danger_radius' => 500,
+            'status' => 'approved',
+            'created_by' => $worker->id,
+            'moderated_by' => $moder->id,
+        ]);
+
+        HazardPoint::create([
+            'title' => 'Посторонний предмет',
+            'description' => 'Предмет на рельсах',
+            'latitude' => 53.333505,
+            'longitude' => 83.698299,
+            'danger_radius' => 500,
+            'status' => 'approved',
+            'created_by' => $worker->id,
+            'moderated_by' => $moder->id,
+        ]);
+
+        HazardPoint::create([
+            'title' => 'Упавшее дерево',
+            'description' => 'Дерево упало после ветра',
+            'latitude' => 53.335411,
+            'longitude' => 83.692851,
+            'danger_radius' => 500,
+            'status' => 'approved',
+            'created_by' => $worker->id,
+            'moderated_by' => $moder->id,
         ]);
     }
 }
