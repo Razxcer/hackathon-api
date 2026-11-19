@@ -60,7 +60,7 @@ class HazardPointController extends Controller
             ->where('status', 'approved')
             ->whereNotIn('id', $passedIds)
             ->select('*')
-            ->selectRaw("$haversine AS distance", [$lat, $lng, $lat])
+            ->selectRaw("ROUND({$haversine}, 10) AS distance", [$lat, $lng, $lat])
             ->whereRaw("{$haversine} <= 500", [$lat, $lng, $lat])
             ->orderBy('distance')
             ->get();
