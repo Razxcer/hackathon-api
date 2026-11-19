@@ -48,27 +48,30 @@ class DatabaseSeeder extends Seeder
         //     'created_by' => $worker->id,
         // ]);
 
-        HazardPoint::create([
-            'title' => 'Сугроб на путях',
-            'description' => 'Снежый занос перекрывает путь',
-            'latitude' => 53.334044,
-            'longitude' => 83.696042,
-            'danger_radius' => 500,
-            'status' => 'approved',
-            'created_by' => $worker->id,
-            'moderated_by' => $moder->id,
-        ]);
-
+        // //Хорошая точка
         // HazardPoint::create([
-        //     'title' => 'Посторонний предмет',
-        //     'description' => 'Предмет на рельсах',
-        //     'latitude' => 53.333505,
-        //     'longitude' => 83.698299,
+        //     'title' => 'Сугроб на путях',
+        //     'description' => 'Снежый занос перекрывает путь',
+        //     'latitude' => 53.334044,
+        //     'longitude' => 83.696042,
         //     'danger_radius' => 500,
         //     'status' => 'approved',
         //     'created_by' => $worker->id,
         //     'moderated_by' => $moder->id,
         // ]);
+
+        // 53.334102, 83.695286
+
+        HazardPoint::create([
+            'title' => 'Посторонний предмет(тест)',
+            'description' => 'Предмет на рельсах',
+            'latitude' => 53.334102,
+            'longitude' => 83.695286,
+            'danger_radius' => 500,
+            'status' => 'approved',
+            'created_by' => $worker->id,
+            'moderated_by' => $moder->id,
+        ]);
 
         // HazardPoint::create([
         //     'title' => 'Упавшее дерево',
