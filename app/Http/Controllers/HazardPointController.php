@@ -40,7 +40,7 @@ class HazardPointController extends Controller
                     ->from('user_passed_hazards')
                     ->where('user_id', $userId);
             })
-            ->whereRaw("{$haversine} > 1000", [$lat, $lng, $lat])
+            ->whereRaw("{$haversine} > 5000", [$lat, $lng, $lat])
             ->pluck('id');
 
         if ($farHazardIds->isNotEmpty()) {
@@ -61,7 +61,7 @@ class HazardPointController extends Controller
             ->whereNotIn('id', $passedIds)
             ->select('*')
             ->selectRaw("ROUND({$haversine}, 10) AS distance", [$lat, $lng, $lat])
-            ->whereRaw("{$haversine} <= 500", [$lat, $lng, $lat])
+            ->whereRaw("{$haversine} <= 5000", [$lat, $lng, $lat])
             ->orderBy('distance')
             ->get();
 
